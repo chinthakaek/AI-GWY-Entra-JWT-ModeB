@@ -1,0 +1,21 @@
+# Secrets and credentials
+.env
+*.pem
+
+# Development/reference files not needed in the repo
+app_requirements.txt
+aigwy_jwt.md
+entra_setup.md
+
+# Claude Code internal
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# macOS
+.DS_Store
