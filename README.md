@@ -1,6 +1,6 @@
 # Flask Chatbot — Azure Entra ID + Portkey JWT Auth
 
-A Flask web app that authenticates users via **Azure Entra ID SSO** and routes LLM requests through the **Portkey AI Gateway**. The Entra-issued ID token is forwarded directly to Portkey as the API credential — no separate Portkey API key is needed.
+A Flask web app that authenticates users via **Azure Entra ID SSO** and routes LLM requests through the **Portkey public cloud gateway** (`https://aigw.portkey.ai`). The Entra-issued ID token is forwarded directly to Portkey as the API credential — no separate Portkey API key is needed, and no self-hosted gateway is required.
 
 Workspace routing is managed centrally in Entra: each user's Portkey workspace slug is issued as a **hardcoded custom claim** in their JWT, so the app never holds any workspace configuration itself.
 
@@ -25,9 +25,10 @@ Workspace routing is managed centrally in Entra: each user's Portkey workspace s
          x-portkey-workspace: <portkey_workspace claim> ← read from JWT
          x-portkey-metadata:  { email_id, name, ... }  ← read from JWT claims
          ↓
-5. Portkey validates the JWT signature against Microsoft's JWKS,
-   extracts portkey_oid / portkey_workspace / scopes,
-   and routes the request to the correct workspace and LLM provider
+5. Portkey public cloud gateway (aigw.portkey.ai) validates the JWT
+   signature against Microsoft's JWKS, extracts portkey_oid /
+   portkey_workspace / scopes, and routes the request to the correct
+   workspace and LLM provider — no self-hosted gateway needed
 ```
 
 **Key point:** `portkey_workspace` is set once in Entra's claim configuration — the app reads it from the JWT at runtime and passes it straight to Portkey. There is no workspace configuration in the app or `.env`.
